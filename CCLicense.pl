@@ -12,7 +12,7 @@ use strict;
 
 my $CCL_VERSION = '2.5';
 my $CCL_LANG = '';
-my $USE_CCL2_IMG = 1; # If you want to use CCL2 image, set this to "1"
+my $USE_CCL2_IMG = 0; # If you want to use CCL2 image, set this to "1"
 
 eval {
     require MT::Plugin;
@@ -28,8 +28,7 @@ use MT::Template::Context;
 {
     local $SIG{__WARN__} = sub { };
     *MT::Util::cc_url = \&_cc_url;
-    *MT::Template::Context::_hdlr_blog_cc_license_image = \&_cc_img_url
-	if $USE_CCL2_IMG;
+    *MT::Template::Context::_hdlr_blog_cc_license_image = \&_cc_img_url;
 }
 
 sub _cc_url {
@@ -48,7 +47,8 @@ sub _cc_img_url {
     my ($code, $cc_url, $cc_img_url) = $cc =~ /(\S+) (\S+) (\S+)/;
     return $cc_img_url if $cc_img_url;
     "http://creativecommons.org/images/public/" .
-	($cc eq 'pd' ? 'norights' : 'somerights20.png');
+	($cc eq 'pd' ? 'norights.gif' :
+	 ($USE_CCL2_IMG ? 'somerights20.gif' : 'somerights.gif'));
 }
 
 1;
