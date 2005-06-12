@@ -1,6 +1,6 @@
 # CCLicense Plugin for version-conscious CCLicense tags
 #
-# Release 0.01 (Jun 08, 2005)
+# Release 0.02 (Jun 13, 2005)
 #
 # This software is provided as-is. You may use it for commercial or 
 # personal use. If you distribute it, please keep this notice intact.
@@ -17,7 +17,7 @@ my $USE_CCL2_IMG = 0; # If you want to use CCL2 image, set this to "1"
 eval {
     require MT::Plugin;
     my $plugin = new MT::Plugin();
-    $plugin->name("CCLicense Plugin 0.01");
+    $plugin->name("CCLicense Plugin 0.02");
     $plugin->description("CCLicense tags for CCL version $CCL_VERSION" .
 			 ($CCL_LANG ? "/$CCL_LANG" : ""));
     MT->add_plugin($plugin);
@@ -34,7 +34,7 @@ use MT::Template::Context;
 sub _cc_url {
     my $cc = $_[0] or return;
     my ($code, $cc_url, $cc_img_url) = $cc =~ /(\S+) (\S+) (\S+)/;
-    return $cc_url if $cc_url;
+    $cc = $code || $cc;
     $cc eq 'pd' ?
 	"http://web.resource.org/cc/PublicDomain" :
 	"http://creativecommons.org/licenses/$cc/$CCL_VERSION/" .
@@ -45,7 +45,7 @@ sub _cc_img_url {
     require MT::Blog;
     my $cc = $_[0]->stash('blog')->cc_license or return;
     my ($code, $cc_url, $cc_img_url) = $cc =~ /(\S+) (\S+) (\S+)/;
-    return $cc_img_url if $cc_img_url;
+    $cc = $code || $cc;
     "http://creativecommons.org/images/public/" .
 	($cc eq 'pd' ? 'norights.gif' :
 	 ($USE_CCL2_IMG ? 'somerights20.gif' : 'somerights.gif'));
